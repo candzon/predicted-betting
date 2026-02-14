@@ -1,0 +1,15 @@
+# Python Dependencies for Understat Scraper
+# Install with: pip install -r requirements.txt
+
+# HTTP Requests
+requests>=2.31.0
+
+# HTML Parsing
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+
+# Prisma ORM (Python Client)
+prisma>=0.11.0
+
+# Optional: Better terminal output
+colorama>=0.4.6

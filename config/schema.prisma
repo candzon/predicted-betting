@@ -1,0 +1,66 @@
+// Prisma Schema for Understat Betting Analysis Tool
+// Datasource: SQLite (No MySQL/XAMPP)
+
+generator client {
+  provider             = "prisma-client-py"
+  interface            = "asyncio"
+  recursive_type_depth = 5
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../data/betting_analysis.db"
+}
+
+model TeamStats {
+  id       Int    @id @default(autoincrement())
+  league   String // e.g., "EPL", "La_liga", "Serie_A"
+  season   Int    // e.g., 2025
+  teamName String // e.g., "Manchester City"
+  
+  // Match Statistics
+  matches Int
+  wins    Int
+  draws   Int
+  loses   Int
+  
+  // Goal Statistics
+  scored Int
+  missed Int // Conceded goals
+  
+  // Expected Statistics (crucial for betting models)
+  xG   Float // Expected Goals
+  xGA  Float // Expected Goals Against
+  xPTS Float // Expected Points
+  
+  // Form 10 Pertandingan Terakhir
+  last10_form   String? @default("") // e.g., "WWDLWWDWWL"
+  last10_wins   Int?    @default(0)
+  last10_draws  Int?    @default(0)
+  last10_loses  Int?    @default(0)
+  last10_points Int?    @default(0)  // Total points from last 10 matches
+  
+  // Tren Over/Under 2.5 Goals
+  last10_over     Int?   @default(0)  // Jumlah pertandingan Over 2.5
+  last10_under    Int?   @default(0)  // Jumlah pertandingan Under 2.5
+  last10_over_pct Float? @default(0)  // Persentase Over 2.5 dari last 10
+  
+  // Home Statistics (Kandang)
+  home_wins  Int? @default(0)
+  home_draws Int? @default(0)
+  home_loses Int? @default(0)
+  home_over  Int? @default(0)  // Over 2.5 di kandang
+  
+  // Away Statistics (Tandang)
+  away_wins  Int? @default(0)
+  away_draws Int? @default(0)
+  away_loses Int? @default(0)
+  away_over  Int? @default(0)  // Over 2.5 di tandang
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Unique constraint to prevent duplicate entries
+  @@unique([teamName, league, season], name: "unique_team_season")
+  @@index([league, season])
+}
